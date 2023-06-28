@@ -1,8 +1,9 @@
 # 🎬 dfl-batch-processing
-🚀 Batch process (EXTRACT, PACK and MERGE) hundreds of (dst) videos with these PowerShell scripts!
+🚀 Batch process (EXTRACT, PACK and MERGE) hundreds of videos with these PowerShell scripts!
 
-ℹ️ **Before you begin**: Make sure to set your **deepfacelab path** in the EXTRACT, PACK, and MERGE scripts. Then follow these steps:
-1. 📁 First, place all your dst videos in the workspace directory (just like where you would put data_dst.mp4). It should look something like this:
+ℹ️ You may place these files anywhere but first make sure to set your **deepfacelab path** in "paths.txt".
+
+📁 First, place all your videos (srcs or dsts) in the workspace directory. It should look something like this:
 
 ```
 ├── workspace
@@ -15,9 +16,10 @@
 │   │  .
 │   │  .
 ```
+
 *(Right-click and run with PowerShell)*
 
-2. 📦 **EXTRACT**: After extraction, manually remove any bad or misaligned faces.
-3. 🎒 **PACK (optional)**: Pack the extracted faces into "faceset.pak".
-4. 🔄 **MERGE**: The merging process is still manual, but the videos will be merged automatically. *(Make sure the model is present. You can comment the "generic mask" and uncomment the "trained mask" in the MERGE script if you have a trained xseg model.)*
-5. ✅ **FINISH**: Move data_dst video(s) + their extracted facesets and result(s) to seperate folders.
+0. **SRC EXTRACT.ps1**: Extract src faces from multiple videos at once.
+1. **DST EXTRACT.ps1**: Extract dst faces from multiple videos at once into their respective folders.
+2. **DST PACK.ps1**: Pack the extracted faces after removing any bad or misaligned faces.
+3. **DST MERGE.ps1**: Batch merge to mp4.
