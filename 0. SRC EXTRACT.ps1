@@ -2,7 +2,7 @@ $DFL_PATH = Get-Content -Path "paths.txt" -First 1
 
 function GetVideos($path) {
 	$extensions = @('.mp4','.avi','.wmv', '.mkv', '.mov', '.mpg', '.mpeg', '.webm', '.m4v', '.3gp', '.3gpp')
-	return Get-ChildItem -Path $path\workspace | Where-Object {$_.Extension -in $extensions}
+	return Get-ChildItem -Path $path | Where-Object {$_.Extension -in $extensions}
 }
 
 function SrcExtract($fps) {
@@ -17,11 +17,13 @@ function SrcExtract($fps) {
 
 $fps = Read-Host "Enter FPS";
 $index = 0
-$src_videos = GetVideos $DFL_PATH
+$src_videos = GetVideos $DFL_PATH\workspace
 
-foreach ($video in $src_videos) {
+while ($src_videos.count -gt 0)
+{
 	$index++
-	Write-Host ("VIDEO ({0:d3}/{1:d3}). {2}" -f $index, $src_videos.count, $video.Name) -ForegroundColor Green
+	$video = $src_videos[0]
+	Write-Host ("VIDEO ({0:d3}/{1:d3}). {2}" -f $index, ($src_videos.count + $index - 1), $video.Name) -ForegroundColor Green
 	
 	Set-Location $DFL_PATH
 	$new_file_name = "data_src{0}" -f [System.IO.Path]::GetExtension($video)
@@ -31,6 +33,7 @@ foreach ($video in $src_videos) {
 	
 	Set-Location $PSScriptRoot
 	python "helpers/0. SRC EXTRACT (Clean Up).py" --dfl_path $DFL_PATH --index $index --old_video_name $video
+	$src_videos = GetVideos $DFL_PATH\workspace
 }
 
 RunDLL32 User32.dll,MessageBeep
