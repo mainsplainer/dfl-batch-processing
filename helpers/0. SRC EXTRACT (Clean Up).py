@@ -24,7 +24,7 @@ for file in os.listdir():
     os.rename(file, f"{args.index}_{video_name}_{file}")
 
 os.chdir(f"{args.dfl_path}/workspace/")
-shutil.move(f"data_src.{video_ext}", f"processed_videos/{args.old_video_name}")
+shutil.move(f"data_src.{video_ext}", f"{processed_videos}/{args.old_video_name}")
 
 for aligned_face in os.listdir("data_src/aligned/"):
     shutil.move(f"data_src/aligned/{aligned_face}", aligned_faces)
