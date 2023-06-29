@@ -2,7 +2,7 @@ $DFL_PATH = Get-Content -Path "paths.txt" -First 1
 
 function GetVideos($path) {
 	$extensions = @('.mp4','.avi','.wmv', '.mkv', '.mov', '.mpg', '.mpeg', '.webm', '.m4v', '.3gp', '.3gpp')
-	return Get-ChildItem -Path $path\workspace | Where-Object {$_.Extension -in $extensions}
+	return Get-ChildItem -Path $path | Where-Object {$_.Extension -in $extensions}
 }
 
 function DstExtract() {
@@ -19,11 +19,13 @@ function DstExtract() {
 }
 
 $index = 0
-$dst_videos = GetVideos $DFL_PATH
+$dst_videos = GetVideos $DFL_PATH\workspace
 
-foreach ($video in $dst_videos) {
+while ($dst_videos.count -gt 0)
+{
 	$index++
-	Write-Host ("VIDEO ({0:d3}/{1:d3}). {2}" -f $index, $dst_videos.count, $video.Name) -ForegroundColor Green
+	$video = $dst_videos[0]
+	Write-Host ("VIDEO ({0:d3}/{1:d3}). {2}" -f $index, ($dst_videos.count + $index - 1), $video.Name) -ForegroundColor Green
 
 	Set-Location $DFL_PATH
 	$folder_name   = [System.IO.Path]::GetFileNameWithoutExtension($video)
@@ -41,6 +43,7 @@ foreach ($video in $dst_videos) {
 	# Move-Item $new_file_name $folder_name
 	# Start-Sleep -Seconds 5
 	# Move-Item "data_dst" $folder_name
+	$dst_videos = GetVideos $DFL_PATH\workspace
 }
 
 RunDLL32 User32.dll,MessageBeep
