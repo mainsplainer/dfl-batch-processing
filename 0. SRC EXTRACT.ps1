@@ -30,9 +30,7 @@ while ($src_videos.count -gt 0)
 	$video | Rename-Item -NewName $new_file_name
 	
 	SrcExtract $fps
-	
-	Set-Location $PSScriptRoot
-	python "helpers/0. SRC EXTRACT (Clean Up).py" --dfl_path $DFL_PATH --index $index --old_video_name $video
+	python "$PSScriptRoot/helpers/0. SRC EXTRACT (Clean Up).py" --dfl_path $DFL_PATH --index $index --old_video_name $video
 	$src_videos = GetVideos $DFL_PATH\workspace
 }
 
