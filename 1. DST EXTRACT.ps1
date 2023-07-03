@@ -5,6 +5,20 @@ function GetVideos($path) {
 	return Get-ChildItem -Path $path | Where-Object {$_.Extension -in $extensions}
 }
 
+function HasTrainedMask {
+	Set-Location $DFL_PATH\workspace\model
+    $files = Get-ChildItem -File
+	Set-Location $DFL_PATH
+	
+    foreach ($file in $files) {
+        if ($file.Name -like "*Xseg*") {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 function DstExtract() {
 	Set-Location $DFL_PATH
 	
@@ -14,8 +28,14 @@ function DstExtract() {
 	Write-Host "STEP (2/3): Faceset Extraction" -ForegroundColor Yellow 
 	echo `n | & .\"5) data_dst faceset extract.bat"
 	
-	Write-Host "STEP (3/3): Applying Mask" -ForegroundColor Yellow 
-	echo `n | & .\"5.XSeg) data_dst trained mask - apply.bat"
+	if (HasTrainedMask) {
+		Write-Host "STEP (3/3): Applying Trained Mask" -ForegroundColor Yellow 
+		echo `n | & .\"5.XSeg) data_dst trained mask - apply.bat"
+	}
+	else {
+		Write-Host "STEP (3/3): [Trained Mask not found] Applying Generic Mask" -ForegroundColor Yellow 
+		echo `n | & .\"5.XSeg Generic) data_dst whole_face mask - apply.bat"
+	}
 }
 
 $index = 0
