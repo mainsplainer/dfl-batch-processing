@@ -6,17 +6,8 @@ function GetVideos($path) {
 }
 
 function HasTrainedMask {
-	Set-Location $DFL_PATH\workspace\model
-    $files = Get-ChildItem -File
-	Set-Location $DFL_PATH
-	
-    foreach ($file in $files) {
-        if ($file.Name -like "*Xseg*") {
-            return $true
-        }
-    }
-
-    return $false
+    $files = Get-ChildItem -Path "$DFL_PATH\workspace\model" -Filter "*Xseg*" -File
+    return ($files.Count -gt 0)
 }
 
 function DstExtract() {
@@ -53,16 +44,7 @@ while ($dst_videos.count -gt 0)
 	$video | Rename-Item -NewName $new_file_name
 	
 	DstExtract $fps
-
-	Set-Location $PSScriptRoot
-	python "helpers/1. DST EXTRACT (Clean Up).py" --dfl_path $DFL_PATH --old_video_name $video
-
-	# Results in access denied error so needed to wait 5-seconds
-	# Set-Location $DFL_PATH\workspace
-	# New-Item -ItemType Directory $folder_name | Out-Null
-	# Move-Item $new_file_name $folder_name
-	# Start-Sleep -Seconds 5
-	# Move-Item "data_dst" $folder_name
+	python "$PSScriptRoot/helpers/1. DST EXTRACT (Clean Up).py" --dfl_path $DFL_PATH --old_video_name $video
 	$dst_videos = GetVideos $DFL_PATH\workspace
 }
 
